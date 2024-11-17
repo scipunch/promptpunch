@@ -1,12 +1,9 @@
 use std::borrow::Borrow;
 
 use derive_builder::Builder;
+use llm::LlmProvider;
 
-pub trait LlmProvider {
-    fn complete_chat(
-        prompt: Prompt,
-    ) -> impl std::future::Future<Output = anyhow::Result<Completion>> + Send;
-}
+pub mod llm;
 
 #[derive(Debug, Builder)]
 #[builder(setter(into))]
@@ -32,12 +29,10 @@ pub struct Completion {
 }
 
 pub mod prelude {
-    pub use crate::{Prompt, PromptBuilder, PromptMessage, Role, complete, message};
+    pub use crate::{complete, message, Prompt, PromptBuilder, PromptMessage, Role};
 }
 
 pub mod message {
-    use crate::{PromptMessage, Role};
-    
     #[macro_export]
     macro_rules! system {
         ($content:expr) => {
@@ -68,9 +63,9 @@ pub mod message {
         };
     }
 
+    pub use assistant;
     pub use system;
     pub use user;
-    pub use assistant;
 }
 
 pub async fn complete(
