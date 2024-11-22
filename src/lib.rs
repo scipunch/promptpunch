@@ -8,7 +8,13 @@ pub mod llm;
 #[derive(Debug, Builder)]
 #[builder(setter(into))]
 pub struct Prompt {
-    messages: Vec<PromptMessage>,
+    messages: Vec<PromptMessageRequest>,
+}
+
+#[derive(Debug, Clone)]
+pub enum PromptMessageRequest {
+    Message { body: PromptMessage },
+    WaitCompletion,
 }
 
 #[derive(Debug, Clone)]
@@ -29,16 +35,22 @@ pub struct Completion {
 }
 
 pub mod prelude {
-    pub use crate::{complete, message, Prompt, PromptBuilder, PromptMessage, Role};
+    pub use crate::{
+        complete, message, Prompt, PromptBuilder, PromptMessage, PromptMessageRequest, Role,
+    };
 }
 
 pub mod message {
+    pub use crate::PromptMessageRequest;
+
     #[macro_export]
     macro_rules! system {
         ($content:expr) => {
-            PromptMessage {
-                role: Role::System,
-                content: $content.to_string(),
+            PromptMessageRequest::Message {
+                body: PromptMessage {
+                    role: Role::System,
+                    content: $content.to_string(),
+                },
             }
         };
     }
@@ -46,24 +58,23 @@ pub mod message {
     #[macro_export]
     macro_rules! user {
         ($content:expr) => {
-            PromptMessage {
-                role: Role::User,
-                content: $content.to_string(),
+            PromptMessageRequest::Message {
+                body: PromptMessage {
+                    role: Role::User,
+                    content: $content.to_string(),
+                },
             }
         };
     }
 
     #[macro_export]
-    macro_rules! assistant {
-        ($content:expr) => {
-            PromptMessage {
-                role: Role::Assistant,
-                content: $content.to_string(),
-            }
+    macro_rules! complete {
+        () => {
+            PromptMessageRequest::WaitCompletion
         };
     }
 
-    pub use assistant;
+    pub use complete;
     pub use system;
     pub use user;
 }
