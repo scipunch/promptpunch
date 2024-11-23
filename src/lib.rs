@@ -1,7 +1,4 @@
-use std::borrow::Borrow;
-
 use derive_builder::Builder;
-use llm::LlmProvider;
 
 pub mod llm;
 
@@ -30,13 +27,15 @@ pub enum Role {
     Assistant,
 }
 
+#[derive(Debug)]
 pub struct Completion {
     pub messages: Vec<PromptMessage>,
 }
 
 pub mod prelude {
     pub use crate::{
-        complete, message, Prompt, PromptBuilder, PromptMessage, PromptMessageRequest, Role,
+        complete, llm::chat_gpt::ChatGpt, llm::LlmProvider, message, Prompt, PromptBuilder,
+        PromptMessage, PromptMessageRequest, Role,
     };
 }
 
@@ -78,4 +77,3 @@ pub mod message {
     pub use system;
     pub use user;
 }
-

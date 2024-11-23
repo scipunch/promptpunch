@@ -1,5 +1,5 @@
 use super::LlmProvider;
-use std::fmt::Display;
+use std::{borrow::Borrow, fmt::Display};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -45,15 +45,15 @@ impl ChatGpt {
 }
 
 impl LlmProvider for ChatGpt {
-    async fn complete_chat(&self, prompt: Prompt) -> anyhow::Result<Completion> {
+    async fn complete_chat(&self, prompt: impl Borrow<Prompt> + std::marker::Send) -> anyhow::Result<Completion> {
         let mut request = ChatGptCompletionRequest {
             model: self.model.to_string(),
             messages: vec![],
         };
 
-        for message_request in prompt.messages {
+        for message_request in &prompt.borrow().messages {
             match message_request {
-                crate::PromptMessageRequest::Message { body } => request.messages.push(body.into()),
+                crate::PromptMessageRequest::Message { body } => request.messages.push(body.clone().into()),
                 crate::PromptMessageRequest::WaitCompletion => {
                     self.make_completion(&mut request).await?;
                 }
