@@ -31,7 +31,7 @@ pub enum Role {
 }
 
 pub struct Completion {
-    messages: Vec<PromptMessage>,
+    pub messages: Vec<PromptMessage>,
 }
 
 pub mod prelude {
