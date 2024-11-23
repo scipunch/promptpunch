@@ -23,7 +23,7 @@ pub struct PromptMessage {
     pub content: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Role {
     System,
     User,
@@ -79,9 +79,3 @@ pub mod message {
     pub use user;
 }
 
-pub async fn complete(
-    llm_provider: impl LlmProvider,
-    prompt: impl Borrow<Prompt>,
-) -> anyhow::Result<Completion> {
-    todo!()
-}
