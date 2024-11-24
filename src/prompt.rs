@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::io::BufRead;
 use std::{fs::File, path::PathBuf};
 
@@ -9,10 +10,10 @@ pub struct InjectableData {
 }
 
 impl InjectableData {
-    pub fn new(placeholder: String, content: String) -> Self {
+    pub fn new(placeholder: impl Display, content: impl Display) -> Self {
         Self {
-            placeholder,
-            content,
+            placeholder: placeholder.to_string(),
+            content: content.to_string(),
         }
     }
 }
