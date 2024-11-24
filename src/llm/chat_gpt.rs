@@ -14,7 +14,7 @@ pub struct ChatGpt {
 
 impl ChatGpt {
     pub fn from_env() -> Self {
-        let api_token = std::env::var("OPENAI_API_TOKEN").expect("Set OPENAI_API_TOKEN");
+        let api_token = std::env::var("OPENAI_API_KEY").expect("Set OPENAI_API_TOKEN");
         Self {
             api_token,
             model: ChatGptModel::default(),
@@ -28,10 +28,9 @@ impl ChatGpt {
             .post("https://api.openai.com/v1/chat/completions")
             .header("Content-Type", "application/json")
             .header("Authorization", format!("Bearer {}", self.api_token))
-            .body(serde_json::to_string(&request)?)
+            .body(dbg!(serde_json::to_string(&request)?))
             .send()
             .await?
-            .error_for_status()?
             .json::<ChatGptCompletionResponse>()
             .await?;
 
@@ -40,20 +39,27 @@ impl ChatGpt {
                 request.messages.push(choice.message);
             }
         }
+        
         Ok(())
     }
 }
 
 impl LlmProvider for ChatGpt {
-    async fn complete_chat(&self, prompt: impl Borrow<Prompt> + std::marker::Send) -> anyhow::Result<Completion> {
+    async fn complete_chat(
+        &self,
+        prompt: impl Borrow<Prompt> + std::marker::Send,
+    ) -> anyhow::Result<Completion> {
         let mut request = ChatGptCompletionRequest {
             model: self.model.to_string(),
             messages: vec![],
+            temperature: prompt.borrow().temperature,
         };
 
         for message_request in &prompt.borrow().messages {
             match message_request {
-                crate::PromptMessageRequest::Message { body } => request.messages.push(body.clone().into()),
+                crate::PromptMessageRequest::Message { body } => {
+                    request.messages.push(body.clone().into())
+                }
                 crate::PromptMessageRequest::WaitCompletion => {
                     self.make_completion(&mut request).await?;
                 }
@@ -108,10 +114,11 @@ impl From<ChatGptMessage> for PromptMessage {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 struct ChatGptCompletionRequest {
     model: String,
     messages: Vec<ChatGptMessage>,
+    temperature: f32,
 }
 
 #[derive(Debug, Deserialize)]
@@ -134,13 +141,13 @@ struct ChatGptCompletionResponse {
 #[serde(rename_all = "camelCase")]
 struct Usage {
     #[allow(dead_code)]
-    prompt_tokens: i64,
+    prompt_tokens: Option<i64>,
     #[allow(dead_code)]
-    completion_tokens: i64,
+    completion_tokens: Option<i64>,
     #[allow(dead_code)]
-    total_tokens: i64,
+    total_tokens: Option<i64>,
     #[allow(dead_code)]
-    completion_tokens_details: CompletionTokensDetails,
+    completion_tokens_details: Option<CompletionTokensDetails>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -161,22 +168,22 @@ struct Choice {
     #[allow(dead_code)]
     logprobs: Value,
     #[allow(dead_code)]
-    finish_reason: String,
+    finish_reason: Option<String>,
     #[allow(dead_code)]
     index: i64,
 }
 
 #[derive(Debug, Default)]
 pub enum ChatGptModel {
-    #[default]
     Latest4o,
+    #[default]
     Mini4o,
 }
 
 impl Display for ChatGptModel {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let str = match self {
-            ChatGptModel::Latest4o => "gpt-4o-latest",
+            ChatGptModel::Latest4o => "chatgpt-4o-latest ",
             ChatGptModel::Mini4o => "gpt-4o-mini",
         };
         write!(f, "{}", str)

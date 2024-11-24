@@ -6,6 +6,7 @@ pub mod llm;
 #[builder(setter(into))]
 pub struct Prompt {
     messages: Vec<PromptMessageRequest>,
+    temperature: f32
 }
 
 #[derive(Debug, Clone)]

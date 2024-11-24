@@ -10,6 +10,7 @@ async fn main() -> anyhow::Result<()> {
             message::complete!(),
             message::user!("Repeate ur words"),
         ])
+        .temperature(0.7)
         .build()?;
 
     let completion = llm.complete_chat(prompt).await?;
