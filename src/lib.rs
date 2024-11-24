@@ -6,8 +6,8 @@ pub mod prompt;
 #[derive(Debug, Builder, Clone)]
 #[builder(setter(into))]
 pub struct Prompt {
-    messages: Vec<PromptMessageRequest>,
-    temperature: f32,
+    pub messages: Vec<PromptMessageRequest>,
+    pub temperature: f32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
