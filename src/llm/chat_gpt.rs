@@ -176,16 +176,20 @@ struct Choice {
 #[derive(Debug, Default)]
 pub enum ChatGptModel {
     /// Context window - 128,000
-    /// Max output - 16,384
-    Latest4o,
-    /// Context window - 128,000
     /// Max output - 32,768
     O1Preview,
     /// Context window - 128,000
     /// Max output - 65,536
     O1Mini,
     /// Context window - 128,000
-    /// Max output - 4,096
+    /// Max output - 16,384
+    Latest4o,
+    /// Context window - 128,000
+    /// Max output - 16,384
+    #[default]
+    Mini4o,
+    /// Context window - 128,000
+    /// Max output - 4,096    
     Turbo4,
     /// Context window - 8,192
     /// Max output - 8,192
@@ -193,10 +197,6 @@ pub enum ChatGptModel {
     /// Context window - 16,385
     /// Max output - 4,096
     Turbo35,
-    /// Context window - 128,000
-    /// Max output - 16,384
-    #[default]
-    Mini4o,
 }
 
 impl Display for ChatGptModel {
