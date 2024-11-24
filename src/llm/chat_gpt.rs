@@ -28,7 +28,7 @@ impl ChatGpt {
             .post("https://api.openai.com/v1/chat/completions")
             .header("Content-Type", "application/json")
             .header("Authorization", format!("Bearer {}", self.api_token))
-            .body(dbg!(serde_json::to_string(&request)?))
+            .body(serde_json::to_string(&request)?)
             .send()
             .await?
             .json::<ChatGptCompletionResponse>()
