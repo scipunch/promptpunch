@@ -6,7 +6,7 @@ use crate::{PromptMessage, PromptMessageRequest, Role};
 pub fn read_markdown_prompt(path: PathBuf) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let file = File::open(path)?;
     let reader = std::io::BufReader::new(file);
-    _read_markdown_prompt(reader.lines().flatten())
+    _read_markdown_prompt(reader.lines().map_while(Result::ok))
 }
 
 fn _read_markdown_prompt(
@@ -46,7 +46,7 @@ fn _read_markdown_prompt(
             }
             role = maybe_role;
         } else {
-            content += &line;
+            content += line;
         }
     }
 
