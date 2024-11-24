@@ -3,7 +3,7 @@ use derive_builder::Builder;
 pub mod llm;
 pub mod prompt;
 
-#[derive(Debug, Builder)]
+#[derive(Debug, Builder, Clone)]
 #[builder(setter(into))]
 pub struct Prompt {
     messages: Vec<PromptMessageRequest>,
