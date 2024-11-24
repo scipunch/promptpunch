@@ -184,10 +184,10 @@ pub enum ChatGptModel {
     O1Mini,
     /// Context window - 128,000
     /// Max output - 16,384
+    #[default]
     Latest4o,
     /// Context window - 128,000
     /// Max output - 16,384
-    #[default]
     Mini4o,
     /// Context window - 128,000
     /// Max output - 4,096    
