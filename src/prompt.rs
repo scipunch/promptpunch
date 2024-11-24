@@ -3,14 +3,25 @@ use std::{fs::File, path::PathBuf};
 
 use crate::{PromptMessage, PromptMessageRequest, Role};
 
-pub fn read_markdown_prompt_from_file(path: PathBuf) -> anyhow::Result<Vec<PromptMessageRequest>> {
+pub struct InjectableData {
+    placeholder: String,
+    content: String
+}
+
+impl InjectableData {
+    pub fn new(placeholder: String, content: String) -> Self {
+        Self { placeholder, content }
+    }
+}
+
+pub fn read_markdown_prompt_from_file(path: PathBuf, injectable_data: Option<InjectableData>) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let file = File::open(path)?;
     let reader = std::io::BufReader::new(file);
-    read_markdown_prompt(reader.lines().map_while(Result::ok))
+    read_markdown_prompt(reader.lines().map_while(Result::ok), injectable_data)
 }
 
 pub fn read_markdown_prompt(
-    lines: impl IntoIterator<Item = impl AsRef<str>>,
+    lines: impl IntoIterator<Item = impl AsRef<str>>, injectable_data: Option<InjectableData>
 ) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let mut messages = vec![];
     let mut role = None;
@@ -46,7 +57,11 @@ pub fn read_markdown_prompt(
             }
             role = maybe_role;
         } else {
-            content += line;
+            let line = match injectable_data {
+                Some(ref data) => line.replace(&data.placeholder_name, &data.content),
+                None => line.to_string()
+            };
+            content += &line;
         }
     }
 
@@ -72,7 +87,7 @@ Some user prompt
 # User
 Another user prompt
 "#;
-        let got = read_markdown_prompt(markdown.lines()).unwrap();
+        let got = read_markdown_prompt(markdown.lines(), None).unwrap();
         let expected = vec![
             message::system!("System prompt"),
             message::user!("Some user prompt"),
