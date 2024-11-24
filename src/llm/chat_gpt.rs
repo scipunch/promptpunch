@@ -39,7 +39,7 @@ impl ChatGpt {
                 request.messages.push(choice.message);
             }
         }
-        
+
         Ok(())
     }
 }
