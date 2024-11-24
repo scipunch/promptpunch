@@ -6,6 +6,7 @@ use serde_json::Value;
 
 use crate::{Completion, Prompt, PromptMessage, Role};
 
+#[derive(Clone)]
 pub struct ChatGpt {
     api_token: String,
     model: ChatGptModel,
@@ -173,7 +174,7 @@ struct Choice {
     index: i64,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub enum ChatGptModel {
     /// Context window - 128,000
     /// Max output - 32,768
