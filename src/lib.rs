@@ -1,6 +1,7 @@
 use derive_builder::Builder;
 
 pub mod llm;
+pub mod prompt;
 
 #[derive(Debug, Builder)]
 #[builder(setter(into))]
@@ -9,13 +10,13 @@ pub struct Prompt {
     temperature: f32
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PromptMessageRequest {
     Message { body: PromptMessage },
     WaitCompletion,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PromptMessage {
     pub role: Role,
     pub content: String,
