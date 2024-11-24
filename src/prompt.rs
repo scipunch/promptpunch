@@ -3,13 +3,13 @@ use std::{fs::File, path::PathBuf};
 
 use crate::{PromptMessage, PromptMessageRequest, Role};
 
-pub fn read_markdown_prompt(path: PathBuf) -> anyhow::Result<Vec<PromptMessageRequest>> {
+pub fn read_markdown_prompt_from_file(path: PathBuf) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let file = File::open(path)?;
     let reader = std::io::BufReader::new(file);
-    _read_markdown_prompt(reader.lines().map_while(Result::ok))
+    read_markdown_prompt(reader.lines().map_while(Result::ok))
 }
 
-fn _read_markdown_prompt(
+pub fn read_markdown_prompt(
     lines: impl IntoIterator<Item = impl AsRef<str>>,
 ) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let mut messages = vec![];
@@ -57,7 +57,7 @@ fn _read_markdown_prompt(
 mod tests {
     use crate::prelude::*;
 
-    use super::_read_markdown_prompt;
+    use super::read_markdown_prompt;
 
     #[test]
     fn parses_markdown() {
@@ -72,7 +72,7 @@ Some user prompt
 # User
 Another user prompt
 "#;
-        let got = _read_markdown_prompt(markdown.lines()).unwrap();
+        let got = read_markdown_prompt(markdown.lines()).unwrap();
         let expected = vec![
             message::system!("System prompt"),
             message::user!("Some user prompt"),
