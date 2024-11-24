@@ -1,3 +1,4 @@
+use anyhow::Context;
 use derive_builder::Builder;
 
 pub mod llm;
@@ -32,6 +33,16 @@ pub enum Role {
 #[derive(Debug)]
 pub struct Completion {
     pub messages: Vec<PromptMessage>,
+}
+impl Completion {
+    pub fn last_assistant_response(&self) -> anyhow::Result<String> {
+        let last_message = self.messages
+            .iter()
+            .filter(|msg| msg.role == Role::Assistant)
+            .last()
+            .context("There is no assistant message")?;
+        Ok(last_message.content.clone())
+    }
 }
 
 pub mod prelude {
