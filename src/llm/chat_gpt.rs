@@ -175,7 +175,26 @@ struct Choice {
 
 #[derive(Debug, Default)]
 pub enum ChatGptModel {
+    /// Context window - 128,000
+    /// Max output - 16,384
     Latest4o,
+    /// Context window - 128,000
+    /// Max output - 32,768
+    O1Preview,
+    /// Context window - 128,000
+    /// Max output - 65,536
+    O1Mini,
+    /// Context window - 128,000
+    /// Max output - 4,096
+    Turbo4,
+    /// Context window - 8,192
+    /// Max output - 8,192
+    Just4,
+    /// Context window - 16,385
+    /// Max output - 4,096
+    Turbo35,
+    /// Context window - 128,000
+    /// Max output - 16,384
     #[default]
     Mini4o,
 }
@@ -183,8 +202,13 @@ pub enum ChatGptModel {
 impl Display for ChatGptModel {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let str = match self {
-            ChatGptModel::Latest4o => "chatgpt-4o-latest ",
             ChatGptModel::Mini4o => "gpt-4o-mini",
+            ChatGptModel::Latest4o => "chatgpt-4o-latest",
+            ChatGptModel::O1Preview => "o1-preview",
+            ChatGptModel::O1Mini => "o1-mini",
+            ChatGptModel::Turbo4 => "gpt-4-turbo",
+            ChatGptModel::Just4 => "gpt-4",
+            ChatGptModel::Turbo35 => "gpt-3.5-turbo",
         };
         write!(f, "{}", str)
     }
