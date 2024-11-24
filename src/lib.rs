@@ -47,8 +47,8 @@ impl Completion {
 
 pub mod prelude {
     pub use crate::{
-        complete, llm::chat_gpt::ChatGpt, llm::LlmProvider, message, Prompt, PromptBuilder,
-        PromptMessage, PromptMessageRequest, Role,
+        llm::chat_gpt::ChatGpt, llm::LlmProvider, message, Prompt, PromptBuilder,
+        PromptMessage, PromptMessageRequest, Role, prompt::InjectableData
     };
 }
 
