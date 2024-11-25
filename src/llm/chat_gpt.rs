@@ -31,9 +31,17 @@ impl ChatGpt {
             .header("Authorization", format!("Bearer {}", self.api_token))
             .body(serde_json::to_string(&request)?)
             .send()
-            .await?
-            .json::<ChatGptCompletionResponse>()
             .await?;
+
+        if response.status() != reqwest::StatusCode::OK {
+            anyhow::bail!(
+                "Request to OpenAI failed with HTTP status {} and returned {}",
+                response.status(),
+                response.text().await?
+            )
+        }
+
+        let response = response.json::<ChatGptCompletionResponse>().await?;
 
         if let Some(choice) = response.choices.into_iter().next() {
             if choice.message.role == "assistant" {
