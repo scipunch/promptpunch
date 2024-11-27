@@ -16,10 +16,17 @@ pub struct ChatGpt {
 impl ChatGpt {
     pub fn from_env() -> Self {
         let api_token = std::env::var("OPENAI_API_KEY").expect("Set OPENAI_API_TOKEN");
+        let mut client = reqwest::Client::builder();
+        if let Ok(proxy) = std::env::var("OPENAI_PROXY") {
+            client =
+                client.proxy(reqwest::Proxy::http(proxy).expect("Falied to bind proxy to OpenAI"));
+        }
         Self {
             api_token,
             model: ChatGptModel::default(),
-            client: reqwest::Client::new(),
+            client: client
+                .build()
+                .expect("Failed to create http client for ChatGPT"),
         }
     }
 
