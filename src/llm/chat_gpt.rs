@@ -18,6 +18,7 @@ impl ChatGpt {
         let api_token = std::env::var("OPENAI_API_KEY").expect("Set OPENAI_API_TOKEN");
         let mut client = reqwest::Client::builder();
         if let Ok(proxy) = std::env::var("OPENAI_PROXY") {
+            log::info!("Creating ChatGPT client with proxy");
             client =
                 client.proxy(reqwest::Proxy::http(proxy).expect("Falied to bind proxy to OpenAI"));
         }
