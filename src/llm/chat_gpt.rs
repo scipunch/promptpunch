@@ -20,7 +20,7 @@ impl ChatGpt {
         if let Ok(proxy) = std::env::var("OPENAI_PROXY") {
             log::info!("Creating ChatGPT client with proxy");
             client =
-                client.proxy(reqwest::Proxy::http(proxy).expect("Falied to bind proxy to OpenAI"));
+                client.proxy(reqwest::Proxy::all(proxy).expect("Falied to bind proxy to OpenAI"));
         }
         Self {
             api_token,
