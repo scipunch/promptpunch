@@ -8,6 +8,7 @@ pub mod prompt;
 #[builder(setter(into))]
 pub struct Prompt {
     pub messages: Vec<PromptMessageRequest>,
+    #[builder(default = "0.3")]
     pub temperature: f32,
 }
 
@@ -36,7 +37,8 @@ pub struct Completion {
 }
 impl Completion {
     pub fn last_assistant_response(&self) -> anyhow::Result<String> {
-        let last_message = self.messages
+        let last_message = self
+            .messages
             .iter()
             .filter(|msg| msg.role == Role::Assistant)
             .last()
@@ -47,8 +49,8 @@ impl Completion {
 
 pub mod prelude {
     pub use crate::{
-        llm::chat_gpt::ChatGpt, llm::LlmProvider, message, Prompt, PromptBuilder,
-        PromptMessage, PromptMessageRequest, Role, prompt::InjectableData
+        llm::chat_gpt::ChatGpt, llm::LlmProvider, message, prompt::InjectableData, Prompt,
+        PromptBuilder, PromptMessage, PromptMessageRequest, Role,
     };
 }
 
