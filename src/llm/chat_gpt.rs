@@ -31,6 +31,11 @@ impl ChatGpt {
         }
     }
 
+    pub fn with_model(mut self, model: ChatGptModel) -> Self {
+        self.model = model;
+        self
+    }
+
     async fn make_completion(&self, request: &mut ChatGptCompletionRequest) -> anyhow::Result<()> {
         let response = self
             .client
