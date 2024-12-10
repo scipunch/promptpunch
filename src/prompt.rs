@@ -1,6 +1,7 @@
 use std::fmt::Display;
+use std::fs::File;
 use std::io::BufRead;
-use std::{fs::File, path::PathBuf};
+use std::path::Path;
 
 use crate::{PromptMessage, PromptMessageRequest, Role};
 
@@ -19,7 +20,7 @@ impl InjectableData {
 }
 
 pub fn read_markdown_prompt_from_file(
-    path: PathBuf,
+    path: impl AsRef<Path>,
     injectable_data: &[InjectableData],
 ) -> anyhow::Result<Vec<PromptMessageRequest>> {
     let file = File::open(path)?;
