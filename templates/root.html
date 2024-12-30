@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+        <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
         <title>PromptPunch</title>
         <style type="text/tailwindcss">
          @layer components {
@@ -49,14 +50,18 @@
         </style>
     </head>
     <body>
-        <div id="app" class="h-screen bg-zinc-950">
+        <div
+            id="app"
+            class="h-screen bg-zinc-950 relative"
+            hx-ext="response-targets"
+        >
             <form
                 class="grid grid-cols-3 gap-2 p-4 h-screen"
                 hx-post="/"
                 hx-target="#prompt-output"
                 hx-indicator="#prompt-output-loader"
+                hx-target-400="#prompt-output"
             >
-                
                 <div class="section-column">
                     <h1 class="section-column-header">Prompt</h1>
                     <div class="section-column-body grow">
