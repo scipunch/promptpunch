@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
         <title>PromptPunch</title>
         <style type="text/tailwindcss">
          @layer components {
@@ -49,32 +50,48 @@
     </head>
     <body>
         <div id="app" class="h-screen bg-zinc-950">
-            <form class="grid grid-cols-3 gap-2 p-4 h-screen">
+            <form
+                class="grid grid-cols-3 gap-2 p-4 h-screen"
+                hx-post="/"
+            >
+                
                 <div class="section-column">
                     <h1 class="section-column-header">Prompt</h1>
                     <div class="section-column-body grow">
-
                         <textarea
+                            name="prompt"
                             placeholder="# System&#10;Some system prompt&#10;&#10;# User&#10;Some user input that uses {placheloder_name}&#10;&#10;# Assistant"
-                        ></textarea>                                                    
+                        ></textarea>
                     </div>
-
                 </div>
+                
                 <div class="section-column">
                     <h1 class="section-column-header">Input</h1>
                     <div class="section-column-body grow flex-col space-y-2">
-                        <input type="text" placeholder="{placehodler_name}">
+                        <input
+                            name="placeholder-name"
+                            type="text"
+                            placeholder="{placehodler_name}"
+                        >
                         <textarea
+                            name="placeholder-value"
                             placeholder="{placeholder_name} value"
                         ></textarea>
                     </div>
                 </div>
+                
                 <div class="section-column">
                     <h1 class="section-column-header">Output</h1>
                     <div class="section-column-body">
-                        <button class="btn-primary">Generate ></button>
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Generate &gt;
+                        </button>
                     </div>
                 </div>
+                
             </div>
         </div>
     </body>
