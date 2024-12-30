@@ -6,7 +6,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use std::collections::HashMap;
+use serde::Deserialize;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -34,11 +34,20 @@ mod get {
 mod post {
     use super::*;
 
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct GenerateRequest {
+        prompt: String,
+        placeholder_name: String,
+        placeholder_value: String,
+    }
+
     pub async fn generate(
         State(_state): State<AppState>,
-        Form(form): Form<HashMap<String, String>>,
+        Form(req): Form<GenerateRequest>,
     ) -> impl IntoResponse {
-        tracing::info!("Got form request {form:?}");
+        tracing::info!("Got form request {req:?}");
+        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
         "Generated prompt"
     }
 }
