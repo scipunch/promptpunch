@@ -4,6 +4,9 @@ use derive_builder::Builder;
 pub mod llm;
 pub mod prompt;
 
+#[cfg(feature = "web")]
+pub mod web;
+
 #[derive(Debug, Builder, Clone)]
 #[builder(setter(into))]
 pub struct Prompt {
