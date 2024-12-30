@@ -1,4 +1,5 @@
 use super::LlmProvider;
+use async_trait::async_trait;
 use std::{borrow::Borrow, fmt::Display};
 
 use serde::{Deserialize, Serialize};
@@ -66,6 +67,7 @@ impl ChatGpt {
     }
 }
 
+#[async_trait]
 impl LlmProvider for ChatGpt {
     async fn complete_chat(
         &self,
