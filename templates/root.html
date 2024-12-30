@@ -53,6 +53,7 @@
             <form
                 class="grid grid-cols-3 gap-2 p-4 h-screen"
                 hx-post="/"
+                hx-target="#prompt-output"
             >
                 
                 <div class="section-column">
@@ -82,16 +83,16 @@
                 
                 <div class="section-column">
                     <h1 class="section-column-header">Output</h1>
-                    <div class="section-column-body">
+                    <div class="section-column-body flex-col space-y-2">
                         <button
                             type="submit"
-                            class="btn-primary"
+                            class="btn-primary self-start"
                         >
                             Generate &gt;
                         </button>
+                        <div id="prompt-output"></div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </body>
