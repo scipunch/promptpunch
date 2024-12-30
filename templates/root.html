@@ -3,9 +3,73 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
         <title>PromptPunch</title>
+        <style type="text/tailwindcss">
+         @layer components {
+             * {
+                 @apply accent-teal-800 focus:accent-teal-900 text-zinc-100;
+                 box-sizing: border-box; 
+             }
+
+             .question {
+                 @apply text-2xl;
+             }
+
+             .btn-primary {
+                 @apply px-2 py-1 text-center focus:outline-none focus:ring focus:ring-zinc-500 bg-zinc-300 text-zinc-900 active:bg-zinc-100;
+             }
+
+             textarea {
+                 @apply w-full border-none bg-zinc-800 text-zinc-400 focus:outline-none p-2 grow;
+                 resize: none;
+             }
+
+             .required {
+                 @apply text-red-500;
+             }
+
+             .section-column {
+                 @apply bg-zinc-900 border-2 border-zinc-300 flex flex-col;
+             }
+
+             .section-column-header {
+                 @apply p-1 border-b-2 text-right;
+             }
+
+             .section-column-body {
+                 @apply p-2 flex;
+             }
+         }
+        </style>
     </head>
     <body>
-        <div id="app"></div>
+        <div id="app" class="h-screen bg-zinc-950">
+            <div class="grid grid-cols-3 gap-2 p-4 h-screen">
+                <div class="section-column">
+                    <h1 class="section-column-header">Prompt</h1>
+                    <div class="section-column-body grow">
+                        <textarea
+                            placeholder="# System&#10;Some system prompt&#10;&#10;# User&#10;Some user input&#10;&#10;# Assistant"
+                        ></textarea>                                                    
+                    </div>
+
+                </div>
+                <div class="section-column">
+                    <h1 class="section-column-header">Input</h1>
+                    <div class="section-column-body grow">
+                        <textarea
+                            placeholder="Your generic text here"
+                        ></textarea>
+                    </div>
+                </div>
+                <div class="section-column">
+                    <h1 class="section-column-header">Output</h1>
+                    <div class="section-column-body">
+                        <button class="btn-primary">Process ></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
