@@ -12,3 +12,6 @@ tests:
 
 example-base:
 	cargo run --example base
+
+watch-web:
+	cargo watch --quiet --watch templates --exec 'run --features web --bin web'
