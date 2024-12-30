@@ -1,4 +1,8 @@
-use crate::llm::chat_gpt::ChatGpt;
+use crate::{
+    llm::{chat_gpt::ChatGpt, LlmProvider},
+    prelude::*,
+    prompt::InjectableData,
+};
 use askama_axum::Template;
 use axum::{
     extract::{Form, State},
@@ -8,6 +12,7 @@ use axum::{
     Router,
 };
 use serde::Deserialize;
+use std::fmt::Display;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -49,8 +54,16 @@ mod post {
         message: String,
     }
 
+    impl PromptPunchError {
+        pub fn new(message: impl Display) -> Self {
+            Self {
+                message: message.to_string(),
+            }
+        }
+    }
+
     pub async fn generate(
-        State(_state): State<AppState>,
+        State(state): State<AppState>,
         Form(req): Form<GenerateRequest>,
     ) -> impl IntoResponse {
         tracing::info!("Got form request {req:?}");
@@ -63,13 +76,47 @@ mod post {
         if !prompt.contains(&placeholder_name) {
             return (
                 StatusCode::BAD_REQUEST,
-                PromptPunchError {
-                    message: format!("Placeholder {} not found in the prompt", placeholder_name),
-                },
+                PromptPunchError::new(format!(
+                    "Placeholder {} not found in the prompt",
+                    placeholder_name
+                )),
             )
                 .into_response();
         }
-        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-        "Generated prompt".into_response()
+        let injectable_data = [InjectableData::new(placeholder_name, placeholder_value)];
+
+        let Ok(messages) = crate::prompt::read_markdown_prompt(prompt.lines(), &injectable_data)
+        else {
+            return (
+                StatusCode::BAD_REQUEST,
+                PromptPunchError::new("Failed to read prompt"),
+            )
+                .into_response();
+        };
+
+        let prompt = PromptBuilder::default().messages(messages).build().unwrap();
+
+        let completion = match state.llm.complete_chat(prompt).await {
+            Ok(r) => r,
+            Err(err) => {
+                let msg = format!("Failed to get completion from LLM with {err:?}");
+                tracing::error!(msg);
+                return (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    PromptPunchError::new(msg),
+                )
+                    .into_response();
+            }
+        };
+
+        completion
+            .messages
+            .into_iter()
+            .filter(|msg| msg.role == Role::Assistant)
+            .enumerate()
+            .map(|(idx, msg)| format!("{} :::: {}", idx + 1, msg.content))
+            .collect::<Vec<_>>()
+            .join("\n")
+            .into_response()
     }
 }
