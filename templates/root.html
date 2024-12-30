@@ -24,6 +24,10 @@
                  @apply w-full border-none bg-zinc-800 text-zinc-400 focus:outline-none p-2 grow;
                  resize: none;
              }
+             
+             input {
+                 @apply w-full border-none bg-zinc-800 text-zinc-400 focus:outline-none p-2;
+             }
 
              .required {
                  @apply text-red-500;
@@ -49,17 +53,19 @@
                 <div class="section-column">
                     <h1 class="section-column-header">Prompt</h1>
                     <div class="section-column-body grow">
+
                         <textarea
-                            placeholder="# System&#10;Some system prompt&#10;&#10;# User&#10;Some user input&#10;&#10;# Assistant"
+                            placeholder="# System&#10;Some system prompt&#10;&#10;# User&#10;Some user input that uses {{placheloder_name}}&#10;&#10;# Assistant"
                         ></textarea>                                                    
                     </div>
 
                 </div>
                 <div class="section-column">
                     <h1 class="section-column-header">Input</h1>
-                    <div class="section-column-body grow">
+                    <div class="section-column-body grow flex-col space-y-2">
+                        <input type="text" placeholder="{{placehodler_name}}">
                         <textarea
-                            placeholder="Your generic text here"
+                            placeholder="{{placeholder_name}} value"
                         ></textarea>
                     </div>
                 </div>
