@@ -54,6 +54,7 @@
                 class="grid grid-cols-3 gap-2 p-4 h-screen"
                 hx-post="/"
                 hx-target="#prompt-output"
+                hx-indicator="#prompt-output-loader"
             >
                 
                 <div class="section-column">
@@ -84,16 +85,19 @@
                 <div class="section-column">
                     <h1 class="section-column-header">Output</h1>
                     <div class="section-column-body flex-col space-y-2">
-                        <button
-                            type="submit"
-                            class="btn-primary self-start"
-                        >
-                            Generate &gt;
-                        </button>
+                        <div class="flex space-x-4">
+                            <button
+                                type="submit"
+                                class="btn-primary self-start"
+                            >
+                                Generate &gt;
+                            </button>
+                            <p id="prompt-output-loader" class="htmx-indicator">Processing...</p>
+                        </div>
                         <div id="prompt-output"></div>
                     </div>
                 </div>
-            </div>
+        </div>
         </div>
     </body>
 </html>
