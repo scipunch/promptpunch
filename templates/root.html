@@ -67,7 +67,7 @@
                     <div class="section-column-body grow">
                         <textarea
                             name="prompt"
-                            placeholder="# System&#10;Some system prompt&#10;&#10;# User&#10;Some user input that uses {placheloder_name}&#10;&#10;# Assistant"
+                            placeholder="{{ prompt_info.prompt_markdown }}"
                         ></textarea>
                     </div>
                 </div>
@@ -78,11 +78,11 @@
                         <input
                             name="placeholderName"
                             type="text"
-                            placeholder="{placehodler_name}"
+                            placeholder="{{ prompt_info.placeholder_name }}"
                         >
                         <textarea
                             name="placeholderValue"
-                            placeholder="{placeholder_name} value"
+                            placeholder="{{ prompt_info.placeholder_name }} value"
                         ></textarea>
                     </div>
                 </div>

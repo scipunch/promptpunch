@@ -17,6 +17,29 @@ use std::fmt::Display;
 #[derive(Clone)]
 pub struct AppState {
     pub llm: ChatGpt,
+    pub prompt_info: PromptInfo,
+}
+
+#[derive(Clone)]
+pub struct PromptInfo {
+    pub prompt_markdown: String,
+    pub placeholder_name: String,
+}
+
+impl Default for PromptInfo {
+    fn default() -> Self {
+        Self {
+            prompt_markdown: r#"# System
+Some system prompt
+
+# User
+Some user input that uses {placheloder_name}
+
+# Assistant"#
+                .to_string(),
+            placeholder_name: "{placeholder_name}".to_string(),
+        }
+    }
 }
 
 pub fn init_router() -> Router<AppState> {
@@ -30,10 +53,14 @@ mod get {
 
     #[derive(Template)]
     #[template(path = "root.html")]
-    struct Root {}
+    struct Root {
+        prompt_info: PromptInfo,
+    }
 
-    pub async fn root() -> impl IntoResponse {
-        Root {}
+    pub async fn root(State(state): State<AppState>) -> impl IntoResponse {
+        Root {
+            prompt_info: state.prompt_info,
+        }
     }
 }
 
