@@ -66,6 +66,7 @@
                     <h1 class="section-column-header">Prompt</h1>
                     <div class="section-column-body grow">
                         <textarea
+                            required
                             name="prompt"
                             placeholder="Prompt"
                         >{{ prompt_info.prompt_markdown }}</textarea>
@@ -76,12 +77,14 @@
                     <h1 class="section-column-header">Input</h1>
                     <div class="section-column-body grow flex-col space-y-2">
                         <input
+                            required
                             name="placeholderName"
                             type="text"
                             placeholder="Placeholder name"
                             value="{{ prompt_info.placeholder_name }}"
                         >
                         <textarea
+                            required
                             name="placeholderValue"
                             placeholder="{{ prompt_info.placeholder_name }} value"
                         ></textarea>
