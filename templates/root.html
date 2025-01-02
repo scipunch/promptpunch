@@ -11,7 +11,7 @@
          @layer components {
              * {
                  @apply accent-teal-800 focus:accent-teal-900 text-zinc-100;
-                 box-sizing: border-box; 
+                 box-sizing: border-box;
              }
 
              .question {
@@ -23,12 +23,12 @@
              }
 
              textarea {
-                 @apply w-full border-none bg-zinc-800 text-zinc-400 focus:outline-none p-2 grow;
+                 @apply w-full border-none bg-zinc-800 placeholder-zinc-400 text-zinc-300 focus:outline-none p-2 grow;
                  resize: none;
              }
-             
+
              input {
-                 @apply w-full border-none bg-zinc-800 text-zinc-400 focus:outline-none p-2;
+                 @apply w-full border-none bg-zinc-800 placeholder-zinc-400 text-zinc-300 focus:outline-none p-2;
              }
 
              .required {
@@ -67,18 +67,19 @@
                     <div class="section-column-body grow">
                         <textarea
                             name="prompt"
-                            placeholder="{{ prompt_info.prompt_markdown }}"
-                        ></textarea>
+                            placeholder="Prompt"
+                        >{{ prompt_info.prompt_markdown }}</textarea>
                     </div>
                 </div>
-                
+
                 <div class="section-column">
                     <h1 class="section-column-header">Input</h1>
                     <div class="section-column-body grow flex-col space-y-2">
                         <input
                             name="placeholderName"
                             type="text"
-                            placeholder="{{ prompt_info.placeholder_name }}"
+                            placeholder="Placeholder name"
+                            value="{{ prompt_info.placeholder_name }}"
                         >
                         <textarea
                             name="placeholderValue"
@@ -86,7 +87,7 @@
                         ></textarea>
                     </div>
                 </div>
-                
+
                 <div class="section-column">
                     <h1 class="section-column-header">Output</h1>
                     <div class="section-column-body flex-col space-y-2">
