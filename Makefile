@@ -5,7 +5,7 @@ clippy:
 	cargo clippy --all-features
 
 check:
-	cargo check --all-features
+	cargo check --all-features --examples
 
 tests:
 	cargo test --all-features
