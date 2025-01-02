@@ -142,7 +142,7 @@ mod post {
             .into_iter()
             .filter(|msg| msg.role == Role::Assistant)
             .enumerate()
-            .map(|(idx, msg)| format!("{} :::: {}", idx + 1, msg.content))
+            .map(|(idx, msg)| format!("{} :::: {}\n\n", idx + 1, msg.content))
             .collect::<Vec<_>>()
             .join("\n")
             .into_response()
