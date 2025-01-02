@@ -19,7 +19,7 @@ async fn main() {
         llm: ChatGpt::from_env(),
         prompt_info: PromptInfo::default(),
     };
-    let router = promptpunch::web::init_router().with_state(state);
+    let router = promptpunch::web::init_router(state);
     let host = "0.0.0.0:3000";
     let listener = tokio::net::TcpListener::bind(host).await.unwrap();
     tracing::info!("Starting app on http://{host}");

@@ -42,10 +42,11 @@ Some user input that uses {placheloder_name}
     }
 }
 
-pub fn init_router() -> Router<AppState> {
+pub fn init_router(state: AppState) -> Router {
     Router::new()
         .route("/", get(get::root))
         .route("/", post(post::generate))
+        .with_state(state)
 }
 
 mod get {
