@@ -1,11 +1,10 @@
 use super::LlmProvider;
+use crate::{Completion, Prompt, PromptMessage, Role};
 use async_trait::async_trait;
-use std::{borrow::Borrow, fmt::Display};
-
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
-use crate::{Completion, Prompt, PromptMessage, Role};
+use std::{borrow::Borrow, fmt::Display};
+use tiktoken_rs::p50k_base;
 
 #[derive(Clone)]
 pub struct ChatGpt {
@@ -79,9 +78,12 @@ impl LlmProvider for ChatGpt {
             temperature: prompt.borrow().temperature,
         };
 
+        let mut user_tokens = 0;
+
         for message_request in &prompt.borrow().messages {
             match message_request {
                 crate::PromptMessageRequest::Message { body } => {
+                    user_tokens += count_tokens(&body.content);
                     request.messages.push(body.clone().into())
                 }
                 crate::PromptMessageRequest::WaitCompletion => {
@@ -91,14 +93,30 @@ impl LlmProvider for ChatGpt {
         }
         self.make_completion(&mut request).await?;
 
+        let messages = request
+            .messages
+            .into_iter()
+            .map(Into::<PromptMessage>::into)
+            .collect::<Vec<_>>();
+
+        let assistant_tokens = messages
+            .iter()
+            .filter(|msg| msg.role == Role::Assistant)
+            .map(|msg| count_tokens(&msg.content))
+            .sum();
+
         Ok(Completion {
-            messages: request
-                .messages
-                .into_iter()
-                .map(Into::into)
-                .collect::<Vec<_>>(),
+            messages,
+            user_tokens,
+            assistant_tokens,
         })
     }
+}
+
+pub fn count_tokens(input: impl AsRef<str>) -> usize {
+    let tokenizer = p50k_base().expect("Failed to initialize tokenizer");
+    let tokens = tokenizer.encode_with_special_tokens(input.as_ref());
+    tokens.len()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

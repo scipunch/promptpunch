@@ -37,6 +37,8 @@ pub enum Role {
 #[derive(Debug)]
 pub struct Completion {
     pub messages: Vec<PromptMessage>,
+    pub user_tokens: usize,
+    pub assistant_tokens: usize,
 }
 impl Completion {
     pub fn last_assistant_response(&self) -> anyhow::Result<String> {
