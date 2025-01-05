@@ -9,7 +9,7 @@ use tiktoken_rs::p50k_base;
 #[derive(Clone)]
 pub struct ChatGpt {
     api_token: String,
-    model: ChatGptModel,
+    pub model: ChatGptModel,
     client: reqwest::Client,
 }
 
