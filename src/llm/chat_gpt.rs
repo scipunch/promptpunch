@@ -241,6 +241,21 @@ pub enum ChatGptModel {
     Turbo35,
 }
 
+impl ChatGptModel {
+    pub fn context_window(&self) -> usize {
+        use ChatGptModel::*;
+        match self {
+            O1Preview => 128_000,
+            O1Mini => 128_000,
+            Latest4o => 128_000,
+            Mini4o => 128_000,
+            Turbo4 => 128_000,
+            Just4 => 8_192,
+            Turbo35 => 16_385,
+        }
+    }
+}
+
 impl Display for ChatGptModel {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let str = match self {
