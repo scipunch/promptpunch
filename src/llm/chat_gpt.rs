@@ -119,6 +119,14 @@ pub fn count_tokens(input: impl AsRef<str>) -> usize {
     tokens.len()
 }
 
+pub fn count_prompt_tokens(prompt_markdown: impl Display, placeholders: &[&str]) -> usize {
+    let mut md = prompt_markdown.to_string();
+    for placeholder in placeholders {
+        md = md.replace(placeholder, "");
+    }
+    count_tokens(md)
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct ChatGptMessage {
     role: String,
